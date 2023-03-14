@@ -1,5 +1,5 @@
 import bcryptjs from 'bcryptjs';
-import { IUser } from '../../models/user.model';
+import { ILoginUser, IUser, IUserExtended } from '../../models/user.model';
 import { AuthRepository } from './auth.repoitory';
 import jwt from 'jsonwebtoken';
 
@@ -8,7 +8,9 @@ export class AuthService {
   private salt = bcryptjs.genSaltSync(10);
 
   async login(email: string, password: string) {
-    const candidate = await this.authRepository.getUserByEmail(email);
+    const candidate = await this.authRepository.getUserByFields({email: email});
+    console.log(process.env.SECRET_TOKEN)
+    console.log(candidate)
     if (candidate) {
       const passwordResult = bcryptjs.compareSync(password, candidate.password);
       if (passwordResult) {
@@ -27,13 +29,27 @@ export class AuthService {
     } else return { code: 404, json: { message: 'User not found' } };
   }
 
-  signin(user: IUser) {
-    if (!this.authRepository.getUserByEmail(user.email)) {
-      user.password = bcryptjs.hashSync(user.password, this.salt);
-      this.authRepository.saveUser(user);
+  async signin(user: IUser) {
+
+    const candidate = await this.authRepository.getUserByFields({
+      email : user.email,
+      userName: user.userName
+    });
+    user.password = bcryptjs.hashSync(user.password, this.salt);
+    if (!candidate) {
+      const newUser: IUserExtended = {
+        ...user,
+        rating: 0,
+        createdAt: new Date(),
+        isStaff: false,
+        isSuperUser: false,
+        enabled: true,
+      };
+      this.authRepository.saveUser(newUser);
       return { code: 200, json: { message: 'Succeeded' } };
     } else {
       return { code: 422, json: { message: 'User was reqistered' } };
     }
+
   }
 }

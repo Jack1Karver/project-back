@@ -1,16 +1,22 @@
-import { AbstractRepository } from "../../db/abstract.repositry"
-import { IUser } from "../../models/user.model"
+import { AbstractRepository } from '../../db/abstract.repositry';
+import { IUser } from '../../models/user.model';
 
-
-export class AuthRepository extends AbstractRepository{
-
-
-    saveUser(user: IUser){
-        return 'succeded'
+export class AuthRepository extends AbstractRepository {
+  saveUser(user: IUser) {
+    try{
+    this.insertAndGetID('user_table', user)
+    } catch(e){
+      console.log(e)
     }
+  }
 
-    async getUserByEmail(email: string): Promise<IUser>{
-        const result = await this.getByField('email', 'user', email)
-        return result as IUser
-    }
+  async getUserByFields(values: object): Promise<IUser | null> {
+      const result = await this.getByFields('user_table', values, false);
+      if (result.length) {
+        return result[0] as IUser;
+      }
+      return null;
+
+   
+  }
 }

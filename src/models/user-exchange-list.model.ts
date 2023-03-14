@@ -2,6 +2,6 @@ export interface IUserExchangeList {
   id: number;
   idExchangeList: number;
   idOfferList: number;
-  trackNumber: string;
+  trackNumber?: string;
   receiving: boolean;
 }

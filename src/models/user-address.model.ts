@@ -5,7 +5,7 @@ export interface IUserAddress {
   addrCity: string;
   addrStreet: string;
   addrHouse: string;
-  addrStructure: string;
-  addrApart: string;
+  addrStructure?: string;
+  addrApart?: string;
   isDefault: boolean;
 }
