@@ -2,31 +2,32 @@ import bcryptjs from 'bcryptjs';
 import { ILoginUser, IUser, IUserExtended } from '../../models/user.model';
 import { AuthRepository } from './auth.repoitory';
 import jwt from 'jsonwebtoken';
+import { USER_NOT_FOUND } from '../../config/errors.config';
 
 export class AuthService {
   private authRepository = new AuthRepository();
   private salt = bcryptjs.genSaltSync(10);
 
-  async login(email: string, password: string) {
-    const candidate = await this.authRepository.getUserByFields({email: email});
+  async login(user: ILoginUser) {
+    const candidate = await this.authRepository.getUserByFields({email: user.email});
     console.log(process.env.SECRET_TOKEN)
     console.log(candidate)
     if (candidate) {
-      const passwordResult = bcryptjs.compareSync(password, candidate.password);
+      const passwordResult = bcryptjs.compareSync(user.password, candidate.password);
       if (passwordResult) {
         const token = jwt.sign(
           {
-            email: candidate.email,
             userId: candidate.id,
+            userName: candidate.userName
           },
           process.env.SECRET_TOKEN!,
           { expiresIn: 3600 }
         );
-        return { code: 200, json: { token: `Bearer ${token}` } };
+        return { token: `Bearer ${token}` };
       } else {
-        return { code: 401, json: { message: 'Email or Password are not valid' } };
+        throw { code: 401, json: { message: 'Email or Password are not valid' } };
       }
-    } else return { code: 404, json: { message: 'User not found' } };
+    } else throw USER_NOT_FOUND;
   }
 
   async signin(user: IUser) {
@@ -46,9 +47,9 @@ export class AuthService {
         enabled: true,
       };
       this.authRepository.saveUser(newUser);
-      return { code: 200, json: { message: 'Succeeded' } };
+      return { message: 'Succeeded'};
     } else {
-      return { code: 422, json: { message: 'User was reqistered' } };
+      throw { code: 422, json: { message: 'User was registered' } };
     }
 
   }

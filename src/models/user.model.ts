@@ -1,11 +1,11 @@
 export interface ILoginUser {
-  id: number;
+  id?: number;
   email: string;
   password: string;
-  userName: string;
 }
 
 export interface IUser extends ILoginUser {
+  userName: string;
   firstName: string;
   lastName: string;
   secondName?: string;

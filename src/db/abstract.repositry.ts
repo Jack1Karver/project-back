@@ -58,7 +58,7 @@ export class AbstractRepository {
     return queryResult[0].id;
   }
 
-  getByFields(table: string, columns: object, conj: boolean) {
+  getByFields(table: string, columns: object, conj: boolean = false) {
     const columnValues = Object.values(columns);
     const columnNames = Object.keys(columns).map((columnName: string) => `${columnName}`);
     const conditions = columnNames
@@ -68,7 +68,6 @@ export class AbstractRepository {
       .join(conj ? ' AND ' : ' OR ');
       
       const query = `SELECT * FROM ${table} WHERE ${conditions} LIMIT 1`
-      console.log(query);
     return this.connection.sqlQuery(query);
   }
 }

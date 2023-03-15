@@ -5,6 +5,7 @@ import passport from 'passport'
 import dotenv from 'dotenv';
 import { passportfN } from './midleware/passport';
 import { AuthController } from './modules/auth/auth.controller';
+import { ROUTES } from './routes';
     
 const PORT = process.env.PORT || 4001
 
@@ -18,7 +19,10 @@ app.use(cors({
 dotenv.config({path: '../.env'})
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }))
 app.use(bodyParser.json({ limit: '50mb' }))
-app.use('/auth', AuthController);
+ROUTES.map(router=>{
+    return app.use(router.path, router.router);
+})
+
 app.use(passport.initialize());
 passportfN
 

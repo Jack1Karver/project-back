@@ -11,7 +11,7 @@ export class AuthRepository extends AbstractRepository {
   }
 
   async getUserByFields(values: object): Promise<IUser | null> {
-      const result = await this.getByFields('user_table', values, false);
+      const result = await this.getByFields('user_table', values);
       if (result.length) {
         return result[0] as IUser;
       }

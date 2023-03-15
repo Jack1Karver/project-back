@@ -9,7 +9,7 @@ CREATE TABLE "author" (
 
 
 
-CREATE TABLE "bookResponse" (
+CREATE TABLE "book_response" (
 	"id" serial NOT NULL,
 	"idBookLiterary" int NOT NULL,
 	"idUser" int NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE "bookResponse" (
 
 
 
-CREATE TABLE "bookLiterary" (
+CREATE TABLE "book_literary" (
 	"id" serial NOT NULL,
 	"idAuthor" int NOT NULL,
 	"bookName" varchar(50) NOT NULL,
@@ -35,14 +35,14 @@ CREATE TABLE "bookLiterary" (
 
 
 
-CREATE TABLE "userTable" (
+CREATE TABLE "user_table" (
 	"id" serial NOT NULL,
-	"firstName" varchar(25) NOT NULL,
+	"name" varchar(25) NOT NULL,
 	"lastName" varchar(50) NOT NULL,
 	"secondName" varchar(25) NOT NULL,
-	"email" varchar(15) NOT NULL,
+	"email" varchar(50) NOT NULL,
 	"userName" varchar(20) NOT NULL,
-	"password" varchar(15) NOT NULL,
+	"password" varchar(500) NOT NULL,
 	"rating" int NOT NULL,
 	"createdAt" DATE NOT NULL,
 	"enabled" bool NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE "userTable" (
 
 
 
-CREATE TABLE "userAddress" (
+CREATE TABLE "user_address" (
 	"id" serial NOT NULL,
 	"idUser" int NOT NULL,
 	"addrIndex" varchar(6) NOT NULL,
@@ -83,7 +83,7 @@ CREATE TABLE "status" (
 
 
 
-CREATE TABLE "userMsg" (
+CREATE TABLE "user_msg" (
 	"id" serial NOT NULL,
 	"idUser" int NOT NULL,
 	"createAt" DATE NOT NULL,
@@ -98,7 +98,7 @@ CREATE TABLE "userMsg" (
 
 
 
-CREATE TABLE "wishList" (
+CREATE TABLE "wish_list" (
 	"id" serial NOT NULL,
 	"idUser" int NOT NULL,
 	"createAt" DATE NOT NULL,
@@ -112,7 +112,7 @@ CREATE TABLE "wishList" (
 
 
 
-CREATE TABLE "userList" (
+CREATE TABLE "user_list" (
 	"id" serial NOT NULL,
 	"typeList" int NOT NULL,
 	"idList" int NOT NULL,
@@ -135,7 +135,7 @@ CREATE TABLE "category" (
 
 
 
-CREATE TABLE "userValueCategory" (
+CREATE TABLE "user_value_categor" (
 	"id" serial NOT NULL,
 	"idUserList" int NOT NULL,
 	"idCategory" int NOT NULL,
@@ -146,7 +146,7 @@ CREATE TABLE "userValueCategory" (
 
 
 
-CREATE TABLE "offerList" (
+CREATE TABLE "offer_list" (
 	"id" serial NOT NULL,
 	"idBookLiterary" int NOT NULL,
 	"idUser" int NOT NULL,
@@ -162,7 +162,7 @@ CREATE TABLE "offerList" (
 
 
 
-CREATE TABLE "exchangeList" (
+CREATE TABLE "exchange_list" (
 	"id" serial NOT NULL,
 	"idOfferList1" int NOT NULL,
 	"idWishList1" int NOT NULL,
@@ -177,7 +177,7 @@ CREATE TABLE "exchangeList" (
 
 
 
-CREATE TABLE "userExchangeList" (
+CREATE TABLE "user_exchange_list" (
 	"id" serial NOT NULL,
 	"idExchangeList" int NOT NULL,
 	"idOfferList" int NOT NULL,
@@ -191,38 +191,38 @@ CREATE TABLE "userExchangeList" (
 
 
 
-ALTER TABLE "bookResponse" ADD CONSTRAINT "bookResponse_fk0" FOREIGN KEY ("idBookLiterary") REFERENCES "bookLiterary"("id");
-ALTER TABLE "bookResponse" ADD CONSTRAINT "bookResponse_fk1" FOREIGN KEY ("idUser") REFERENCES "userTable"("id");
+ALTER TABLE "book_response" ADD CONSTRAINT "bookResponse_fk0" FOREIGN KEY ("idBookLiterary") REFERENCES "book_literary"("id");
+ALTER TABLE "book_response" ADD CONSTRAINT "bookResponse_fk1" FOREIGN KEY ("idUser") REFERENCES "user_table"("id");
 
-ALTER TABLE "bookLiterary" ADD CONSTRAINT "bookLiterary_fk0" FOREIGN KEY ("idAuthor") REFERENCES "author"("id");
-
-
-ALTER TABLE "userAddress" ADD CONSTRAINT "userAddress_fk0" FOREIGN KEY ("idUser") REFERENCES "userTable"("id");
+ALTER TABLE "book_literary" ADD CONSTRAINT "bookLiterary_fk0" FOREIGN KEY ("idAuthor") REFERENCES "author"("id");
 
 
-ALTER TABLE "userMsg" ADD CONSTRAINT "userMsg_fk0" FOREIGN KEY ("idUser") REFERENCES "userTable"("id");
-ALTER TABLE "userMsg" ADD CONSTRAINT "userMsg_fk1" FOREIGN KEY ("idStatus") REFERENCES "status"("id");
+ALTER TABLE "user_address" ADD CONSTRAINT "userAddress_fk0" FOREIGN KEY ("idUser") REFERENCES "user_table"("id");
 
-ALTER TABLE "wishList" ADD CONSTRAINT "wishList_fk0" FOREIGN KEY ("idUser") REFERENCES "userTable"("id");
-ALTER TABLE "wishList" ADD CONSTRAINT "wishList_fk1" FOREIGN KEY ("idStatus") REFERENCES "status"("id");
-ALTER TABLE "wishList" ADD CONSTRAINT "wishList_fk2" FOREIGN KEY ("idUserAddress") REFERENCES "userAddress"("id");
 
-ALTER TABLE "userList" ADD CONSTRAINT "userList_fk0" FOREIGN KEY ("idList") REFERENCES "wishList"("id");
+ALTER TABLE "user_msg" ADD CONSTRAINT "userMsg_fk0" FOREIGN KEY ("idUser") REFERENCES "user_table"("id");
+ALTER TABLE "user_msg" ADD CONSTRAINT "userMsg_fk1" FOREIGN KEY ("idStatus") REFERENCES "status"("id");
 
-ALTER TABLE "userValueCategory" ADD CONSTRAINT "userValueCategory_fk0" FOREIGN KEY ("idUserList") REFERENCES "userList"("id");
-ALTER TABLE "userValueCategory" ADD CONSTRAINT "userValueCategory_fk1" FOREIGN KEY ("idCategory") REFERENCES "category"("id");
+ALTER TABLE "wish_list" ADD CONSTRAINT "wishList_fk0" FOREIGN KEY ("idUser") REFERENCES "user_table"("id");
+ALTER TABLE "wish_list" ADD CONSTRAINT "wishList_fk1" FOREIGN KEY ("idStatus") REFERENCES "status"("id");
+ALTER TABLE "wish_list" ADD CONSTRAINT "wishList_fk2" FOREIGN KEY ("idUserAddress") REFERENCES "user_address"("id");
 
-ALTER TABLE "offerList" ADD CONSTRAINT "offerList_fk0" FOREIGN KEY ("idBookLiterary") REFERENCES "bookLiterary"("id");
-ALTER TABLE "offerList" ADD CONSTRAINT "offerList_fk1" FOREIGN KEY ("idUser") REFERENCES "userTable"("id");
-ALTER TABLE "offerList" ADD CONSTRAINT "offerList_fk2" FOREIGN KEY ("idStatus") REFERENCES "status"("id");
+ALTER TABLE "user_list" ADD CONSTRAINT "userList_fk0" FOREIGN KEY ("idList") REFERENCES "wish_list"("id");
 
-ALTER TABLE "exchangeList" ADD CONSTRAINT "exchangeList_fk0" FOREIGN KEY ("idOfferList1") REFERENCES "offerList"("id");
-ALTER TABLE "exchangeList" ADD CONSTRAINT "exchangeList_fk1" FOREIGN KEY ("idWishList1") REFERENCES "wishList"("id");
-ALTER TABLE "exchangeList" ADD CONSTRAINT "exchangeList_fk2" FOREIGN KEY ("idOfferList2") REFERENCES "offerList"("id");
-ALTER TABLE "exchangeList" ADD CONSTRAINT "exchangeList_fk3" FOREIGN KEY ("idWishList2") REFERENCES "wishList"("id");
+ALTER TABLE "user_value_categor" ADD CONSTRAINT "userValueCategory_fk0" FOREIGN KEY ("idUserList") REFERENCES "user_list"("id");
+ALTER TABLE "user_value_categor" ADD CONSTRAINT "userValueCategory_fk1" FOREIGN KEY ("idCategory") REFERENCES "category"("id");
 
-ALTER TABLE "userExchangeList" ADD CONSTRAINT "userExchangeList_fk0" FOREIGN KEY ("idExchangeList") REFERENCES "exchangeList"("id");
-ALTER TABLE "userExchangeList" ADD CONSTRAINT "userExchangeList_fk1" FOREIGN KEY ("idOfferList") REFERENCES "offerList"("id");
+ALTER TABLE "offer_list" ADD CONSTRAINT "offerList_fk0" FOREIGN KEY ("idBookLiterary") REFERENCES "book_literary"("id");
+ALTER TABLE "offer_list" ADD CONSTRAINT "offerList_fk1" FOREIGN KEY ("idUser") REFERENCES "user_table"("id");
+ALTER TABLE "offer_list" ADD CONSTRAINT "offerList_fk2" FOREIGN KEY ("idStatus") REFERENCES "status"("id");
+
+ALTER TABLE "exchange_list" ADD CONSTRAINT "exchangeList_fk0" FOREIGN KEY ("idOfferList1") REFERENCES "offer_list"("id");
+ALTER TABLE "exchange_list" ADD CONSTRAINT "exchangeList_fk1" FOREIGN KEY ("idWishList1") REFERENCES "wish_list"("id");
+ALTER TABLE "exchange_list" ADD CONSTRAINT "exchangeList_fk2" FOREIGN KEY ("idOfferList2") REFERENCES "offer_list"("id");
+ALTER TABLE "exchange_list" ADD CONSTRAINT "exchangeList_fk3" FOREIGN KEY ("idWishList2") REFERENCES "wish_list"("id");
+
+ALTER TABLE "user_exchange_list" ADD CONSTRAINT "userExchangeList_fk0" FOREIGN KEY ("idExchangeList") REFERENCES "exchange_list"("id");
+ALTER TABLE "user_exchange_list" ADD CONSTRAINT "userExchangeList_fk1" FOREIGN KEY ("idOfferList") REFERENCES "offer_list"("id");
 
 
 
