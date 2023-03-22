@@ -1,4 +1,4 @@
-import { AbstractRepository } from "../../db/abstract.repositry";
+import { AbstractRepository } from "../../db/abstract.repository";
 import { IUserExtended } from "../../models/user.model";
 
 export class UserRepository extends AbstractRepository{

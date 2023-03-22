@@ -1,10 +1,10 @@
-import { AbstractRepository } from '../../db/abstract.repositry';
+import { AbstractRepository } from '../../db/abstract.repository';
 import { IUser } from '../../models/user.model';
 
 export class AuthRepository extends AbstractRepository {
-  saveUser(user: IUser) {
+  async saveUser(user: IUser) {
     try{
-    this.insertAndGetID('user_table', user)
+    return await this.insertAndGetID('user_table', user)
     } catch(e){
       console.log(e)
     }

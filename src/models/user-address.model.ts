@@ -1,11 +1,11 @@
 export interface IUserAddress {
   id: number;
-  udUser: number;
+  idUser: number;
   addrIndex: string;
   addrCity: string;
   addrStreet: string;
   addrHouse: string;
   addrStructure?: string;
   addrApart?: string;
-  isDefault: boolean;
+  isDefault?: boolean;
 }

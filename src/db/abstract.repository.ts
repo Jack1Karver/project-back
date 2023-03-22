@@ -1,11 +1,23 @@
 import { Connection } from './connection';
 
-export class AbstractRepository {
+export abstract class AbstractRepository {
   connection = new Connection();
   async insertArrayObjects(tableName: string, arrayObject: object[], foreignKeyField?: string, foreign_id?: number) {
     for (let object of arrayObject) {
       this.insertAndGetID(tableName, object, foreignKeyField, foreign_id);
     }
+  }
+
+  async startTransaction(){
+    const result = await this.connection.sqlQuery('BEGIN;')
+  }
+
+  async rollbackTransaction(){
+    const result = await this.connection.sqlQuery('ROLLBACK;')
+  }
+
+  async commitTransaction(){
+    const result = await this.connection.sqlQuery('COMMIT;')
   }
 
   async insertAndGetID(

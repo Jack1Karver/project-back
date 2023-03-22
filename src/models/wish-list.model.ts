@@ -1,5 +1,5 @@
 export interface IWishList {
-  id: number;
+  id?: number;
   idUser: number;
   createAt: Date;
   updateAt: Date;

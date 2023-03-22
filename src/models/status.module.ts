@@ -1,4 +1,4 @@
 export interface IStatus{
-    id: number;
+    id?: number;
     name: string;
 }
