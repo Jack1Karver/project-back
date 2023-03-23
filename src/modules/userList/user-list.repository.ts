@@ -29,6 +29,9 @@ export class UserListRepository extends AbstractRepository {
   
   
   saveUserList = async ( type:'wish'| 'offer', idList: number) => {
+
+    console.log(idList);
+    console.log(await this.connection.sqlQuery('SELECT * from wish_list'))
     try {
     switch(type){
       case 'wish':{

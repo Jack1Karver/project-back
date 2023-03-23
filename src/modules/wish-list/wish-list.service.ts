@@ -38,13 +38,12 @@ export class WishListService {
         idUserAddress: idUserAddress,
       });
       if (wishId) {
-        const userListId = await this.userListRepository.saveUserList('wish', wishId);
+        const userListId = await this.wishRepository.saveWishList(wishId);
         if (userListId) {
-            console.log(userListId)
           const categoriesId = await this.getCategories(categories);
           console.log(categoriesId)
           for (let id of categoriesId) {
-            await this.userListRepository.saveUserValueCategory(userListId, id);
+            await this.wishRepository.saveUserValueCategory(userListId, id);
           }
         }
       }
