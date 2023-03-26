@@ -19,6 +19,15 @@ OfferListController.post('/', async (req, res) => {
 
 OfferListController.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {});
 
-OfferListController.get('/all', (req, res) => {});
+OfferListController.get('/coincidences', async (req, res) => {
+    try{
+        if(req.query.idUser){
+        const result = await offerListService.getCoincidences(req.query.idUser?.toString())
+        return res.status(200).json(result);
+        }
+    } catch(e){
+        return errorHandler(e, res)
+    }
+});
 
 OfferListController.get('/by-status', (req, res) => {});

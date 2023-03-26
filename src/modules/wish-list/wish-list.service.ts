@@ -16,12 +16,10 @@ export class WishListService {
 
   saveOffer = async (idUser: number, categories: string[], address: IUserAddress, useDefault?: boolean) => {
     try {
-      console.log('transaction')
       await this.wishRepository.startTransaction();
       let idUserAddress: number;
       if (useDefault) {
         const defaultAddress = await this.addresRepository.getDefaultUserAddress(idUser);
-        console.log('getDefault')
         if (!defaultAddress) {
           throw new Error();
         }
@@ -29,7 +27,6 @@ export class WishListService {
       } else {
         idUserAddress = (await this.addresRepository.saveAddress(address))!;
       }
-      console.log('toWish')
       const wishId = await this.wishRepository.saveWish({
         idUser: idUser,
         createAt: new Date(),
@@ -41,7 +38,6 @@ export class WishListService {
         const userListId = await this.wishRepository.saveWishList(wishId);
         if (userListId) {
           const categoriesId = await this.getCategories(categories);
-          console.log(categoriesId)
           for (let id of categoriesId) {
             await this.wishRepository.saveUserValueCategory(userListId, id);
           }

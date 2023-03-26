@@ -39,6 +39,15 @@ export class AddressRepository extends AbstractRepository {
   }
   }
 
+  getUserAddressById = async (idUser: string)=>{
+    const result = await this.getByFields('user_address', {idUser});
+      if (result.length) {
+        return result[0] as IUserAddress;
+      }
+      return null;
+    
+  }
+
   updateDefaultAddress = async (userId: number)=>{
     await this.connection.sqlQuery(`UPDATE user_address SET "isDefault" = false WHERE "idUser" = ${userId}`)
   }

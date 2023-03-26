@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import { USER_NOT_FOUND } from '../../config/errors.config';
 import { IUserAddress } from '../../models/user-address.model';
 import { AddressService } from '../address/address.service';
+import { SECRET_TOKEN } from '../../config/secret';
 
 export class AuthService {
   private authRepository = new AuthRepository();
@@ -21,7 +22,7 @@ export class AuthService {
             userId: candidate.id,
             userName: candidate.userName,
           },
-          process.env.SECRET_TOKEN!,
+          SECRET_TOKEN,
           { expiresIn: 3600 }
         );
         return { token: `Bearer ${token}` };
