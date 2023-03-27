@@ -43,4 +43,14 @@ export class WishListRepository extends AbstractRepository {
     throw new Error();
    }
   };
+
+  getWishById = async (id: number)=>{
+    try{
+    const res = await this.getByFields('wish_list', {id})
+    return res[0] as IWishList
+    } catch(err){
+      console.log(err)
+      throw new Error
+    }
+  }
 }

@@ -18,6 +18,8 @@ export class OfferListService {
   userRepository = new UserRepository();
   addressRepository = new AddressRepository();
 
+  init = 0;
+
   saveOffer = async (idUser: number, book: IBookLiterary, author: IAuthor, categories: string[], offer: IOfferList) => {
     try {
       await this.offerRepository.startTransaction();
@@ -106,55 +108,99 @@ export class OfferListService {
           wishesMap.set(wish.id, [wish.categoryId]);
         }
       }
-      return await this.findCoincidences(wishesMap, idUser);
+      const res =  await this.findCoincidences(wishesMap, Number(idUser));
+      return res
     } catch (e) {
       console.log(e);
       throw new Error();
     }
   };
 
-  findCoincidences = async (wishes: Map<number, number[]>, idUser: string): Promise<ICoincidences> => {
+  findCoincidences = async (wishes: Map<number, number[]>, idUser: number): Promise<ICoincidences> => {
     try {
       let fullOffers: ICoincidence[] = [];
       let condOffers: ICoincidence[] = [];
-      const ids: number[] = []
       let anotherOffers: ICoincidence[] = [];
-      for (let wish of wishes.values()) {
-        const res = await this.offerRepository.findOffersByCategories(idUser, wish, true);
+
+      const users = new Set<number>();
+      const ids: number[] = [];
+
+      for (let wish of wishes.keys()) {
+        const res = await this.offerRepository.findOffersByCategories(idUser, wishes.get(wish)!, true);
         for (let row of res) {
-          if (row.count === wish.length) {
-            fullOffers.push({
-              user: (await this.userRepository.getUserById(row.idUser))!,
-              offer: await this.offerRepository.getOfferById(row.id),
-              address: await this.addressRepository.getUserAddressById(idUser),
-            });
+          if (row.count === wishes.get(wish)!.length) {
+            fullOffers.push(await this.formateICoincidens(row.id, row.idUser, wish));
           } else {
-            condOffers.push({
-              user: (await this.userRepository.getUserById(row.idUser))!,
-              offer: await this.offerRepository.getOfferById(row.id),
-              address: await this.addressRepository.getUserAddressById(idUser),
-            });
+            condOffers.push(await this.formateICoincidens(row.id, row.idUser, wish));
           }
-          ids.push(row.id)
+          ids.push(row.id);
+          users.add(row.idUser);
         }
-        const another = (await this.offerRepository.findOffersByCategories(idUser, [], false))
-        for (let row of another){
-          anotherOffers.push({
-            user: (await this.userRepository.getUserById(row.idUser))!,
-            offer: await this.offerRepository.getOfferById(row.id),
-            address: await this.addressRepository.getUserAddressById(idUser),
-          });
+        const another = await this.offerRepository.findOffersByCategories(idUser, [], false);
+        for (let row of another) {
+          anotherOffers.push(await this.formateICoincidens(row.id, row.idUser, wish));
         }
       }
-      console.log(ids)
+      if (this.init == 0) {
+        const userCoincidences: ICoincidences[] = [];
+        this.init++;
+        for (let user of Array.from(users)) {
+          userCoincidences.push(await this.getCoincidences(`${user}`));
+        }
+        let filteredCoincidences = userCoincidences.map(userCoin => {
+          userCoin.full = userCoin.full.filter(coinc => {
+            return coinc.user.id === idUser;
+          });
+          userCoin.partial = userCoin.partial.filter(coinc => {
+            return coinc.user.id === idUser;
+          });
+          return {full: userCoin.full, partial: userCoin.partial}
+        }).reduce((elem, arr)=>{
+          return {
+            full: elem.full.concat(arr.full),
+            partial: elem.partial.concat(arr.partial)
+          }
+        });
+        return {
+          full: fullOffers.reduce((init, userOffers) => {
+            let coinc =  filteredCoincidences.full.concat(filteredCoincidences.partial).find(offer=>offer.user.id === idUser)
+            if(coinc){
+              init.push({
+                ...userOffers,
+                wishOfferrer: coinc.wish,
+                offerOfferrer: coinc.offer
+              })
+            }return init
+          }, (new Array<ICoincidence>(0))),
+          partial: condOffers.reduce((init, userOffers) => {
+            let coinc =  filteredCoincidences.full.concat(filteredCoincidences.partial).find(offer=>offer.user.id === idUser)
+            if(coinc){
+              init.push({
+                ...userOffers,
+                wishOfferrer: coinc.wish,
+                offerOfferrer: coinc.offer
+              })
+            }return init
+          }, (new Array<ICoincidence>(0)))
+        };
+      }
+
       return {
         full: fullOffers,
         partial: condOffers,
-        another: anotherOffers.filter(offer=>ids.includes(offer.offer.id))
       };
     } catch (e) {
       console.log(e);
       throw new Error();
     }
+  };
+
+  formateICoincidens = async (id: number, idOfferer: number, wish: number) => {
+    return {
+      user: (await this.userRepository.getUserById(idOfferer))!,
+      offer: await this.offerRepository.getOfferById(id),
+      address: await this.addressRepository.getUserAddressById(`${idOfferer}`),
+      wish: await this.wishRepository.getWishById(wish),
+    };
   };
 }
