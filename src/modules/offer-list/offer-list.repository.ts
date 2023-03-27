@@ -13,6 +13,18 @@ export class OfferListRepository extends AbstractRepository {
     }
   };
 
+  getAuthorById = async (id: number) => {
+    try {
+      const res = await this.getByFields('author', {id});
+      if (res.length) {
+        return res[0] as IAuthor
+      }
+      return null;
+    } catch {
+      throw new Error();
+    }
+  };
+
   getAuthor = async (author: IAuthor) => {
     try {
       const res = await this.getByFields('author', author, true);

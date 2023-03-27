@@ -147,6 +147,7 @@ export class OfferListService {
         for (let user of Array.from(users)) {
           userCoincidences.push(await this.getCoincidences(`${user}`));
         }
+
         let filteredCoincidences = userCoincidences.map(userCoin => {
           userCoin.full = userCoin.full.filter(coinc => {
             return coinc.user.id === idUser;
@@ -161,9 +162,10 @@ export class OfferListService {
             partial: elem.partial.concat(arr.partial)
           }
         });
+        this.init = 0
         return {
           full: fullOffers.reduce((init, userOffers) => {
-            let coinc =  filteredCoincidences.full.concat(filteredCoincidences.partial).find(offer=>offer.user.id === idUser)
+            let coinc =  filteredCoincidences.full.concat(filteredCoincidences.partial).find(offer=>offer.wish.idUser === userOffers.user.id)
             if(coinc){
               init.push({
                 ...userOffers,
@@ -172,15 +174,15 @@ export class OfferListService {
               })
             }return init
           }, (new Array<ICoincidence>(0))),
-          partial: condOffers.reduce((init, userOffers) => {
-            let coinc =  filteredCoincidences.full.concat(filteredCoincidences.partial).find(offer=>offer.user.id === idUser)
+          partial: condOffers.reduce((val, userOffers) => {
+            let coinc =  filteredCoincidences.full.concat(filteredCoincidences.partial).find(offer=>offer.wish.idUser === userOffers.user.id)
             if(coinc){
-              init.push({
+              val.push({
                 ...userOffers,
                 wishOfferrer: coinc.wish,
                 offerOfferrer: coinc.offer
               })
-            }return init
+            }return val
           }, (new Array<ICoincidence>(0)))
         };
       }
