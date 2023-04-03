@@ -31,7 +31,7 @@ export class ExchageListService {
         const book = await this.exchangeListRepository.getBookByOfferId(exc.idOfferList1);
         const author = await this.offerListRepository.getAuthorById(book.idAuthor);
         const userExchanges = await this.getUserExchange(exc.idOfferList1, exc.idOfferList2);
-        const address = await this.exchangeListRepository.getUserAddress(exc.idWishList1)
+        const address = await this.exchangeListRepository.getUserAddress(exc.idWishList1);
         return {
           id: exc.id,
           isBoth: exc.isBoth,
@@ -39,7 +39,7 @@ export class ExchageListService {
             author: author,
             book: book,
             isSubmit: true,
-            trackNumber: userExchanges.userExchange1 ? userExchanges.userExchange1.trackNumber: null,
+            trackNumber: userExchanges.userExchange1 ? userExchanges.userExchange1.trackNumber : null,
             receiving: userExchanges.userExchange1 ? userExchanges.userExchange1.receiving : null,
             idOffer: exc.idOfferList1,
           },
@@ -47,9 +47,9 @@ export class ExchageListService {
             user: await this.exchangeListRepository.getUserByOfferId(exc.idOfferList2),
             categories: await this.exchangeListRepository.getCategoriesByOfferId(exc.idOfferList2),
             isSubmit: exc.isBoth,
-            trackNumber: userExchanges.userExchange2 ? userExchanges.userExchange2.trackNumber: null,
+            trackNumber: userExchanges.userExchange2 ? userExchanges.userExchange2.trackNumber : null,
             receiving: userExchanges.userExchange2 ? userExchanges.userExchange2.receiving : null,
-            address: address
+            address: address,
           },
         };
       })
@@ -59,7 +59,7 @@ export class ExchageListService {
         const book = await this.exchangeListRepository.getBookByOfferId(exc.idOfferList2);
         const author = await this.offerListRepository.getAuthorById(book.idAuthor);
         const userExchanges = await this.getUserExchange(exc.idOfferList2, exc.idOfferList1);
-        const address = await this.exchangeListRepository.getUserAddress(exc.idWishList1)
+        const address = await this.exchangeListRepository.getUserAddress(exc.idWishList1);
         return {
           id: exc.id,
           isBoth: exc.isBoth,
@@ -68,16 +68,16 @@ export class ExchageListService {
             book: book,
             isSubmit: exc.isBoth,
             idOffer: exc.idOfferList2,
-            trackNumber: userExchanges.userExchange1 ? userExchanges.userExchange1.trackNumber: null,
-            receiving: userExchanges.userExchange1 ? userExchanges.userExchange1.receiving : null
+            trackNumber: userExchanges.userExchange1 ? userExchanges.userExchange1.trackNumber : null,
+            receiving: userExchanges.userExchange1 ? userExchanges.userExchange1.receiving : null,
           },
           userOffer: {
             user: await this.exchangeListRepository.getUserByOfferId(exc.idOfferList1),
             categories: await this.exchangeListRepository.getCategoriesByOfferId(exc.idOfferList1),
             isSubmit: true,
-            trackNumber: userExchanges.userExchange2 ? userExchanges.userExchange2.trackNumber: null,
+            trackNumber: userExchanges.userExchange2 ? userExchanges.userExchange2.trackNumber : null,
             receiving: userExchanges.userExchange2 ? userExchanges.userExchange2.receiving : null,
-            address: address
+            address: address,
           },
         };
       })
@@ -120,7 +120,7 @@ export class ExchageListService {
   getUserExchange = async (
     idOffer1: number,
     idOffer2: number
-  ): Promise<{ userExchange1: IUserExchangeList | null; userExchange2: IUserExchangeList | null; }> => {
+  ): Promise<{ userExchange1: IUserExchangeList | null; userExchange2: IUserExchangeList | null }> => {
     const exc1 = await this.exchangeListRepository.getUserExchange(idOffer1);
     const exc2 = await this.exchangeListRepository.getUserExchange(idOffer2);
     return {
@@ -129,11 +129,11 @@ export class ExchageListService {
     };
   };
 
-  saveTrackNumber = async (idOfferList: number, track: string)=>{
-    await this.exchangeListRepository.setTrackNumber(idOfferList, track)
-  }
+  saveTrackNumber = async (idOfferList: number, track: string) => {
+    await this.exchangeListRepository.setTrackNumber(idOfferList, track);
+  };
 
-  setReceiving = async (idOfferList: number)=>{
-    await this.exchangeListRepository.setReceiving(idOfferList)
-  }
+  setReceiving = async (idOfferList: number) => {
+    await this.exchangeListRepository.setReceiving(idOfferList);
+  };
 }
