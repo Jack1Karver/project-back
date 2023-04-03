@@ -26,7 +26,7 @@ export class WishListRepository extends AbstractRepository {
     await this.insertAndGetID('user_value_category', { idUserList, idCategory });
   };
 
-  getWishCategories = async (idUser: string) => {
+  getWishCategories = async (idUser: string, idStatus: number) => {
     try{
    let res =  await this.connection.sqlQuery(
       `SELECT wish_list.id as id, category.id as "categoryId" 
@@ -34,7 +34,7 @@ export class WishListRepository extends AbstractRepository {
       JOIN user_list ON wish_list.id = user_list."idWishList" 
       JOIN user_value_category as uvc ON user_list.id = uvc."idUserList"
       JOIN category ON category.id = uvc."idCategory"
-      WHERE wish_list."idUser" = ${idUser}` 
+      WHERE wish_list."idUser" = ${idUser} AND wish_list."idStatus" = ${idStatus}` 
     );
 
     return res as {id: number, categoryId: number}[]

@@ -30,7 +30,7 @@ export class OfferListService {
         idUser: idUser,
         createAt: new Date(),
         updateAt: new Date(),
-        idStatus: await this.getStatus('Новый'),
+        idStatus: await this.getStatus('свободен'),
       });
       if (offerId) {
         const userListId = await this.offerRepository.saveOfferList(offerId);
@@ -99,7 +99,7 @@ export class OfferListService {
 
   getCoincidences = async (idUser: string) => {
     try {
-      const wishes = await this.wishRepository.getWishCategories(idUser);
+      const wishes = await this.wishRepository.getWishCategories(idUser, await this.getStatus('свободен'));
       const wishesMap = new Map<number, number[]>();
       for (let wish of wishes) {
         if (wishesMap.has(wish.id)) {
@@ -126,7 +126,7 @@ export class OfferListService {
       const ids: number[] = [];
 
       for (let wish of wishes.keys()) {
-        const res = await this.offerRepository.findOffersByCategories(idUser, wishes.get(wish)!, true);
+        const res = await this.offerRepository.findOffersByCategories(idUser, wishes.get(wish)!, true, await this.getStatus('свободен'));
         for (let row of res) {
           if (row.count === wishes.get(wish)!.length) {
             fullOffers.push(await this.formateICoincidens(row.id, row.idUser, wish));
@@ -136,7 +136,7 @@ export class OfferListService {
           ids.push(row.id);
           users.add(row.idUser);
         }
-        const another = await this.offerRepository.findOffersByCategories(idUser, [], false);
+        const another = await this.offerRepository.findOffersByCategories(idUser, [], false, await this.getStatus('свободен'));
         for (let row of another) {
           anotherOffers.push(await this.formateICoincidens(row.id, row.idUser, wish));
         }
@@ -161,7 +161,7 @@ export class OfferListService {
             full: elem.full.concat(arr.full),
             partial: elem.partial.concat(arr.partial)
           }
-        });
+        }, {full: [], partial: []});
         this.init = 0
         return {
           full: fullOffers.reduce((init, userOffers) => {

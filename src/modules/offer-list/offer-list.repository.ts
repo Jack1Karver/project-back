@@ -53,7 +53,7 @@ export class OfferListRepository extends AbstractRepository {
     }
   };
 
-  findOffersByCategories = async (idUser: number, categories: number[], eq: boolean) => {
+  findOffersByCategories = async (idUser: number, categories: number[], eq: boolean, idStatus: number) => {
     try {
       const conditions = categories
         .map(cond => {

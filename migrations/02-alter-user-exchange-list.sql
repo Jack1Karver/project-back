@@ -1,0 +1,1 @@
+ALTER TABLE user_exchange_list ALTER COLUMN "trackNumber" DROP NOT NULL

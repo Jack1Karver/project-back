@@ -191,39 +191,39 @@ CREATE TABLE "user_exchange_list" (
 
 
 
-ALTER TABLE "book_response" ADD CONSTRAINT "book_response_fk0" FOREIGN KEY ("idBookLiterary") REFERENCES "book_literary"("id");
-ALTER TABLE "book_response" ADD CONSTRAINT "book_response_fk1" FOREIGN KEY ("idUser") REFERENCES "user_table"("id");
+ALTER TABLE "book_response" ADD CONSTRAINT "book_response_fk0" FOREIGN KEY ("idBookLiterary") REFERENCES "book_literary"("id") ON DELETE CASCADE;
+ALTER TABLE "book_response" ADD CONSTRAINT "book_response_fk1" FOREIGN KEY ("idUser") REFERENCES "user_table"("id") ON DELETE CASCADE;
 
-ALTER TABLE "book_literary" ADD CONSTRAINT "book_literary_fk0" FOREIGN KEY ("idAuthor") REFERENCES "author"("id");
-
-
-ALTER TABLE "user_address" ADD CONSTRAINT "user_address_fk0" FOREIGN KEY ("idUser") REFERENCES "user_table"("id");
+ALTER TABLE "book_literary" ADD CONSTRAINT "book_literary_fk0" FOREIGN KEY ("idAuthor") REFERENCES "author"("id") ON DELETE CASCADE;
 
 
-ALTER TABLE "user_msg" ADD CONSTRAINT "user_msg_fk0" FOREIGN KEY ("idUser") REFERENCES "user_table"("id");
-ALTER TABLE "user_msg" ADD CONSTRAINT "user_msg_fk1" FOREIGN KEY ("idStatus") REFERENCES "status"("id");
+ALTER TABLE "user_address" ADD CONSTRAINT "user_address_fk0" FOREIGN KEY ("idUser") REFERENCES "user_table"("id") ON DELETE CASCADE;
 
-ALTER TABLE "wish_list" ADD CONSTRAINT "wish_list_fk0" FOREIGN KEY ("idUser") REFERENCES "user_table"("id");
-ALTER TABLE "wish_list" ADD CONSTRAINT "wish_list_fk1" FOREIGN KEY ("idStatus") REFERENCES "status"("id");
-ALTER TABLE "wish_list" ADD CONSTRAINT "wish_list_fk2" FOREIGN KEY ("idUserAddress") REFERENCES "user_address"("id");
 
-ALTER TABLE "user_list" ADD CONSTRAINT "user_list_fk0" FOREIGN KEY ("idWishList") REFERENCES "wish_list"("id");
-ALTER TABLE "user_list" ADD CONSTRAINT "user_list_fk1" FOREIGN KEY ("idOfferList") REFERENCES "offer_list"("id");
+ALTER TABLE "user_msg" ADD CONSTRAINT "user_msg_fk0" FOREIGN KEY ("idUser") REFERENCES "user_table"("id") ON DELETE CASCADE;
+ALTER TABLE "user_msg" ADD CONSTRAINT "user_msg_fk1" FOREIGN KEY ("idStatus") REFERENCES "status"("id") ON DELETE CASCADE;
 
-ALTER TABLE "user_value_category" ADD CONSTRAINT "user_value_category_fk0" FOREIGN KEY ("idUserList") REFERENCES "user_list"("id");
-ALTER TABLE "user_value_category" ADD CONSTRAINT "user_value_category_fk1" FOREIGN KEY ("idCategory") REFERENCES "category"("id");
+ALTER TABLE "wish_list" ADD CONSTRAINT "wish_list_fk0" FOREIGN KEY ("idUser") REFERENCES "user_table"("id") ON DELETE CASCADE;
+ALTER TABLE "wish_list" ADD CONSTRAINT "wish_list_fk1" FOREIGN KEY ("idStatus") REFERENCES "status"("id") ON DELETE CASCADE;
+ALTER TABLE "wish_list" ADD CONSTRAINT "wish_list_fk2" FOREIGN KEY ("idUserAddress") REFERENCES "user_address"("id") ON DELETE CASCADE;
 
-ALTER TABLE "offer_list" ADD CONSTRAINT "offer_list_fk0" FOREIGN KEY ("idBookLiterary") REFERENCES "book_literary"("id");
-ALTER TABLE "offer_list" ADD CONSTRAINT "offer_list_fk1" FOREIGN KEY ("idUser") REFERENCES "user_table"("id");
-ALTER TABLE "offer_list" ADD CONSTRAINT "offer_list_fk2" FOREIGN KEY ("idStatus") REFERENCES "status"("id");
+ALTER TABLE "user_list" ADD CONSTRAINT "user_list_fk0" FOREIGN KEY ("idWishList") REFERENCES "wish_list"("id") ON DELETE CASCADE;
+ALTER TABLE "user_list" ADD CONSTRAINT "user_list_fk1" FOREIGN KEY ("idOfferList") REFERENCES "offer_list"("id") ON DELETE CASCADE;
 
-ALTER TABLE "exchange_list" ADD CONSTRAINT "exchange_list_fk0" FOREIGN KEY ("idOfferList1") REFERENCES "offer_list"("id");
-ALTER TABLE "exchange_list" ADD CONSTRAINT "exchange_list_fk1" FOREIGN KEY ("idWishList1") REFERENCES "wish_list"("id");
-ALTER TABLE "exchange_list" ADD CONSTRAINT "exchange_list_fk2" FOREIGN KEY ("idOfferList2") REFERENCES "offer_list"("id");
-ALTER TABLE "exchange_list" ADD CONSTRAINT "exchange_list_fk3" FOREIGN KEY ("idWishList2") REFERENCES "wish_list"("id");
+ALTER TABLE "user_value_category" ADD CONSTRAINT "user_value_category_fk0" FOREIGN KEY ("idUserList") REFERENCES "user_list"("id") ON DELETE CASCADE;
+ALTER TABLE "user_value_category" ADD CONSTRAINT "user_value_category_fk1" FOREIGN KEY ("idCategory") REFERENCES "category"("id") ON DELETE CASCADE;
+ 
+ALTER TABLE "offer_list" ADD CONSTRAINT "offer_list_fk0" FOREIGN KEY ("idBookLiterary") REFERENCES "book_literary"("id") ON DELETE CASCADE;
+ALTER TABLE "offer_list" ADD CONSTRAINT "offer_list_fk1" FOREIGN KEY ("idUser") REFERENCES "user_table"("id") ON DELETE CASCADE;
+ALTER TABLE "offer_list" ADD CONSTRAINT "offer_list_fk2" FOREIGN KEY ("idStatus") REFERENCES "status"("id") ON DELETE CASCADE;
 
-ALTER TABLE "user_exchange_list" ADD CONSTRAINT "user_exchange_list_fk0" FOREIGN KEY ("idExchangeList") REFERENCES "exchange_list"("id");
-ALTER TABLE "user_exchange_list" ADD CONSTRAINT "user_exchange_list_fk1" FOREIGN KEY ("idOfferList") REFERENCES "offer_list"("id");
+ALTER TABLE "exchange_list" ADD CONSTRAINT "exchange_list_fk0" FOREIGN KEY ("idOfferList1") REFERENCES "offer_list"("id") ON DELETE CASCADE;
+ALTER TABLE "exchange_list" ADD CONSTRAINT "exchange_list_fk1" FOREIGN KEY ("idWishList1") REFERENCES "wish_list"("id") ON DELETE CASCADE;
+ALTER TABLE "exchange_list" ADD CONSTRAINT "exchange_list_fk2" FOREIGN KEY ("idOfferList2") REFERENCES "offer_list"("id") ON DELETE CASCADE;
+ALTER TABLE "exchange_list" ADD CONSTRAINT "exchange_list_fk3" FOREIGN KEY ("idWishList2") REFERENCES "wish_list"("id") ON DELETE CASCADE;
+
+ALTER TABLE "user_exchange_list" ADD CONSTRAINT "user_exchange_list_fk0" FOREIGN KEY ("idExchangeList") REFERENCES "exchange_list"("id") ON DELETE CASCADE;
+ALTER TABLE "user_exchange_list" ADD CONSTRAINT "user_exchange_list_fk1" FOREIGN KEY ("idOfferList") REFERENCES "offer_list"("id") ON DELETE CASCADE;
 
 
 
