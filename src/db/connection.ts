@@ -8,8 +8,6 @@ export class Connection {
         this.pool = new Pool(<PoolConfig>db);
     }
 
-  
-
     async sqlQuery(
         queryTextOrConfig: string | QueryConfig<any[]>,
         values?: any[] | undefined
@@ -27,11 +25,8 @@ export class Connection {
         } finally {
             client.release();
         }
-
         return result.rows
     }
-
-   
 }
 
 export const connection = new Connection();
