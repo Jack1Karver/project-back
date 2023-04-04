@@ -1,7 +1,4 @@
-import { IAuthor } from '../../models/author.model';
-import { IBookLiterary } from '../../models/book-literary.model';
-import { ICategory } from '../../models/category.module';
-import { IOfferList } from '../../models/offer-list.model';
+import { STATUS_ENUM } from '../../enum/status.enum';
 import { IUserAddress } from '../../models/user-address.model';
 import { AddressRepository } from '../address/address.repository';
 import { StatusRepository } from '../status/status.repository';
@@ -31,7 +28,7 @@ export class WishListService {
         idUser: idUser,
         createAt: new Date(),
         updateAt: new Date(),
-        idStatus: await this.getStatus('свободен'),
+        idStatus: await this.getStatus(STATUS_ENUM.new),
         idUserAddress: idUserAddress,
       });
       if (wishId) {

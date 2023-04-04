@@ -50,7 +50,6 @@ export class ExchangeListRepository extends AbstractRepository {
     return res[0] as IUserExtended;
   };
   setBoth = async (id: number) => {
-
     await this.connection.sqlQuery(`UPDATE exchange_list SET "isBoth" = true WHERE id = ${id}`);
   };
 
@@ -67,28 +66,37 @@ export class ExchangeListRepository extends AbstractRepository {
     await this.connection.sqlQuery(`UPDATE offer_list SET "idStatus" = ${statusId} WHERE id = ${idOfferList}`);
   };
 
-  insertUserExchange = async (fields) => {
-    await this.insertAndGetID('user_exchange_list', fields)
+  insertUserExchange = async fields => {
+    await this.insertAndGetID('user_exchange_list', fields);
   };
 
-  getUserExchange = async(idOfferList: number)=>{
+  getUserExchangeByOffer = async (idOfferList: number) => {
     const res = await this.getByFields('user_exchange_list', { idOfferList });
-    if(res.length){
-    return res[0] as IUserExchangeList;
-    } return null
-  }
+    if (res.length) {
+      return res[0] as IUserExchangeList;
+    }
+    return null;
+  };
 
-  setTrackNumber = async ( idOfferList: number, trackNumber: string)=>{
-    await this.connection.sqlQuery(`UPDATE user_exchange_list SET "trackNumber" = ${trackNumber} WHERE "idOfferList" = ${idOfferList}`)
-  }
-  setReceiving = async ( idOfferList: number)=>{
-    await this.connection.sqlQuery(`UPDATE user_exchange_list SET receiving = true WHERE "idOfferList" = ${idOfferList}`)
-  }
+  setTrackNumber = async (idOfferList: number, trackNumber: string) => {
+    await this.connection.sqlQuery(
+      `UPDATE user_exchange_list SET "trackNumber" = ${trackNumber} WHERE "idOfferList" = ${idOfferList}`
+    );
+  };
+  setReceiving = async (idOfferList: number) => {
+    await this.connection.sqlQuery(
+      `UPDATE user_exchange_list SET receiving = true WHERE "idOfferList" = ${idOfferList}`
+    );
+  };
 
-  getUserAddress = async (idWishList: number)=>{
+  getUserAddress = async (idWishList: number) => {
     const res = await this.connection.sqlQuery(`SELECT ua.* FROM  user_address as ua 
-    JOIN wish_list as wl ON ua.id = wl."idUserAddress" WHERE wl.id = ${idWishList}`)
-    return res[0] as IUserAddress
-  }
-}
+    JOIN wish_list as wl ON ua.id = wl."idUserAddress" WHERE wl.id = ${idWishList}`);
+    return res[0] as IUserAddress;
+  };
 
+  getUserExchanges = async (idExchangeList: number) => {
+    const res = await this.getByFields('user_exchange_list', { idExchangeList });
+    return res as IUserExchangeList[];
+  };
+}

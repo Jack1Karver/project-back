@@ -1,5 +1,4 @@
 import { USER_NOT_FOUND } from "../../config/errors.config";
-import { ILoginUser } from "../../models/user.model";
 import { UserRepository } from "./user.repository";
 
 

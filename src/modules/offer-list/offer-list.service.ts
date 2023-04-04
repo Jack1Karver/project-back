@@ -1,3 +1,4 @@
+import { STATUS_ENUM } from '../../enum/status.enum';
 import { IAuthor } from '../../models/author.model';
 import { IBookLiterary } from '../../models/book-literary.model';
 import { ICategory } from '../../models/category.module';
@@ -30,7 +31,7 @@ export class OfferListService {
         idUser: idUser,
         createAt: new Date(),
         updateAt: new Date(),
-        idStatus: await this.getStatus('свободен'),
+        idStatus: await this.getStatus(STATUS_ENUM.new),
       });
       if (offerId) {
         const userListId = await this.offerRepository.saveOfferList(offerId);
@@ -99,7 +100,7 @@ export class OfferListService {
 
   getCoincidences = async (idUser: string) => {
     try {
-      const wishes = await this.wishRepository.getWishCategories(idUser, await this.getStatus('свободен'));
+      const wishes = await this.wishRepository.getWishCategories(idUser, await this.getStatus(STATUS_ENUM.new));
       const wishesMap = new Map<number, number[]>();
       for (let wish of wishes) {
         if (wishesMap.has(wish.id)) {
@@ -126,7 +127,7 @@ export class OfferListService {
       const ids: number[] = [];
 
       for (let wish of wishes.keys()) {
-        const res = await this.offerRepository.findOffersByCategories(idUser, wishes.get(wish)!, true, await this.getStatus('свободен'));
+        const res = await this.offerRepository.findOffersByCategories(idUser, wishes.get(wish)!, true, await this.getStatus(STATUS_ENUM.new));
         for (let row of res) {
           if (row.count === wishes.get(wish)!.length) {
             fullOffers.push(await this.formateICoincidens(row.id, row.idUser, wish));
@@ -136,7 +137,7 @@ export class OfferListService {
           ids.push(row.id);
           users.add(row.idUser);
         }
-        const another = await this.offerRepository.findOffersByCategories(idUser, [], false, await this.getStatus('свободен'));
+        const another = await this.offerRepository.findOffersByCategories(idUser, [], false, await this.getStatus(STATUS_ENUM.new));
         for (let row of another) {
           anotherOffers.push(await this.formateICoincidens(row.id, row.idUser, wish));
         }

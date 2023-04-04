@@ -24,8 +24,4 @@ export class AddressService {
   getAddressesById = (userId: number) => {
     return this.addressRepository.getAddressById(userId);
   };
-
-  getAddress = (addressId: string) => {};
-
-  getDefaultUserAddress = (userId: number) => {};
 }

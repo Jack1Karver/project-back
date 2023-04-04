@@ -45,7 +45,7 @@ ExchageListController.post('/track', async (req, res) => {
 
 ExchageListController.post('/receiving', async (req, res) => {
   try {
-    const result = await exchangeListService.setReceiving(req.body.idOffer);
+    const result = await exchangeListService.setReceiving(req.body.idOffer, req.body.idExchange);
     return res.status(200).json(result);
   } catch (e: any) {
     return errorHandler(e, res);

@@ -1,9 +1,9 @@
+import { STATUS_ENUM } from '../../enum/status.enum';
 import { IUserExchangeList } from '../../models/user-exchange-list.model';
 import { ICoincidence } from '../offer-list/dto/coinciends.interface';
 import { OfferListRepository } from '../offer-list/offer-list.repository';
 import { StatusRepository } from '../status/status.repository';
 import { UserRepository } from '../user/user.repository';
-import { WishListRepository } from '../wish-list/wish-list.repository';
 import { ExchangeListRepository } from './exchange-list.repository';
 
 export class ExchageListService {
@@ -88,10 +88,10 @@ export class ExchageListService {
   submitExchange = async (id: number) => {
     await this.exchangeListRepository.setBoth(id);
     const exchange = await this.exchangeListRepository.getExchange(id);
-    await this.exchangeListRepository.updateWishes(exchange.idWishList1, await this.getStatus('занят'));
-    await this.exchangeListRepository.updateWishes(exchange.idWishList2, await this.getStatus('занят'));
-    await this.exchangeListRepository.updateOffer(exchange.idOfferList2, await this.getStatus('занят'));
-    await this.exchangeListRepository.updateOffer(exchange.idOfferList1, await this.getStatus('занят'));
+    await this.exchangeListRepository.updateWishes(exchange.idWishList1, await this.getStatus(STATUS_ENUM.work));
+    await this.exchangeListRepository.updateWishes(exchange.idWishList2, await this.getStatus(STATUS_ENUM.work));
+    await this.exchangeListRepository.updateOffer(exchange.idOfferList2, await this.getStatus(STATUS_ENUM.work));
+    await this.exchangeListRepository.updateOffer(exchange.idOfferList1, await this.getStatus(STATUS_ENUM.work));
     await this.exchangeListRepository.insertUserExchange({
       idExchangeList: exchange.id,
       idOfferList: exchange.idOfferList1,
@@ -121,8 +121,8 @@ export class ExchageListService {
     idOffer1: number,
     idOffer2: number
   ): Promise<{ userExchange1: IUserExchangeList | null; userExchange2: IUserExchangeList | null }> => {
-    const exc1 = await this.exchangeListRepository.getUserExchange(idOffer1);
-    const exc2 = await this.exchangeListRepository.getUserExchange(idOffer2);
+    const exc1 = await this.exchangeListRepository.getUserExchangeByOffer(idOffer1);
+    const exc2 = await this.exchangeListRepository.getUserExchangeByOffer(idOffer2);
     return {
       userExchange1: exc1,
       userExchange2: exc2,
@@ -131,9 +131,21 @@ export class ExchageListService {
 
   saveTrackNumber = async (idOfferList: number, track: string) => {
     await this.exchangeListRepository.setTrackNumber(idOfferList, track);
+    await this.exchangeListRepository.setReceiving(idOfferList);
   };
 
-  setReceiving = async (idOfferList: number) => {
+  setReceiving = async (idOfferList: number, idExchangeList: number) => {
     await this.exchangeListRepository.setReceiving(idOfferList);
+    const exchange = await this.exchangeListRepository.getExchange(idExchangeList);
+    const userExchanges: IUserExchangeList[] = await this.exchangeListRepository.getUserExchanges(idExchangeList);
+    const isBothReceiving = userExchanges.reduce((acc, next) => {
+      return acc && next.receiving;
+    }, true);
+    if (isBothReceiving) {
+      await this.exchangeListRepository.updateOffer(exchange.idOfferList1, await this.getStatus(STATUS_ENUM.done));
+      await this.exchangeListRepository.updateOffer(exchange.idOfferList2, await this.getStatus(STATUS_ENUM.done));
+      await this.exchangeListRepository.updateWishes(exchange.idWishList1, await this.getStatus(STATUS_ENUM.done));
+      await this.exchangeListRepository.updateWishes(exchange.idWishList2, await this.getStatus(STATUS_ENUM.done));
+    }
   };
 }
