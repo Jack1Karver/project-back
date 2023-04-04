@@ -13,7 +13,7 @@ export class AuthService {
   private salt = bcryptjs.genSaltSync(10);
 
   async login(user: ILoginUser) {
-    const candidate = await this.authRepository.getUserByFields({ email: user.email });
+    const candidate = await this.authRepository.getUserByFields({ userName: user.userName });
     if (candidate) {
       const passwordResult = bcryptjs.compareSync(user.password, candidate.password);
       if (passwordResult) {
@@ -27,7 +27,7 @@ export class AuthService {
         );
         return { token: `Bearer ${token}` };
       } else {
-        throw { code: 401, json: { message: 'Email or Password are not valid' } };
+        throw USER_NOT_FOUND;
       }
     } else throw USER_NOT_FOUND;
   }

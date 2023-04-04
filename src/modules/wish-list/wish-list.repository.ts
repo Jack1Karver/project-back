@@ -53,4 +53,5 @@ export class WishListRepository extends AbstractRepository {
       throw new Error
     }
   }
+  
 }

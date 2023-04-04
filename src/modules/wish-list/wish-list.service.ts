@@ -22,6 +22,10 @@ export class WishListService {
         }
         idUserAddress = defaultAddress.id;
       } else {
+        console.log(address)
+        if(address.isDefault){
+          
+        }
         idUserAddress = (await this.addresRepository.saveAddress(address))!;
       }
       const wishId = await this.wishRepository.saveWish({

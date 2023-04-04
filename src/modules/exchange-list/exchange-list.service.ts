@@ -31,7 +31,7 @@ export class ExchageListService {
         const book = await this.exchangeListRepository.getBookByOfferId(exc.idOfferList1);
         const author = await this.offerListRepository.getAuthorById(book.idAuthor);
         const userExchanges = await this.getUserExchange(exc.idOfferList1, exc.idOfferList2);
-        const address = await this.exchangeListRepository.getUserAddress(exc.idWishList1);
+        const address = await this.exchangeListRepository.getUserAddress(exc.idWishList2);
         return {
           id: exc.id,
           isBoth: exc.isBoth,
@@ -131,7 +131,6 @@ export class ExchageListService {
 
   saveTrackNumber = async (idOfferList: number, track: string) => {
     await this.exchangeListRepository.setTrackNumber(idOfferList, track);
-    await this.exchangeListRepository.setReceiving(idOfferList);
   };
 
   setReceiving = async (idOfferList: number, idExchangeList: number) => {
